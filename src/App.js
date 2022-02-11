@@ -31,6 +31,22 @@ function App() {
       id: "5",
       order: 5,
     },
+    {
+      id: "6",
+      order: 6,
+    },
+    {
+      id: "7",
+      order: 7,
+    },
+    {
+      id: "8",
+      order: 8,
+    },
+    {
+      id: "9",
+      order: 9,
+    },
   ];
 
   let [state, setState] = useState({ sortedList: data });
@@ -75,7 +91,7 @@ function App() {
       <ListManager
         items={state.sortedList}
         direction="horizontal"
-        maxItems={3}
+        maxItems={4}
         render={(item) => <ListElement item={item} />}
         onDragEnd={reorderList}
       />
