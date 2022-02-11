@@ -1,23 +1,84 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import React from "react";
+import { ListManager } from "react-beautiful-dnd-grid";
+import { useState, useEffect } from "react";
+import ListElement from "./ListElement";
 
 function App() {
+  const data = [
+    {
+      id: "0",
+      order: 0,
+    },
+    {
+      id: "1",
+      order: 1,
+    },
+    {
+      id: "2",
+      order: 2,
+    },
+    {
+      id: "3",
+      order: 3,
+    },
+    {
+      id: "4",
+      order: 4,
+    },
+    {
+      id: "5",
+      order: 5,
+    },
+  ];
+
+  let [state, setState] = useState({ sortedList: data });
+
+  const sortList = (list) => {
+    setState({
+      sortedList: list
+        .slice()
+        .sort((first, second) => first.order - second.order),
+    });
+    console.log("after", state.sortedList);
+  };
+  console.log("before", state.sortedList);
+  const reorderList = (sourceIndex, destinationIndex) => {
+    if (destinationIndex === sourceIndex) {
+      return;
+    }
+    const list = state.sortedList;
+    if (destinationIndex === 0) {
+      list[sourceIndex].order = list[0].order - 1;
+      sortList(list);
+      return;
+    }
+    if (destinationIndex === list.length - 1) {
+      list[sourceIndex].order = list[list.length - 1].order + 1;
+      sortList(list);
+      return;
+    }
+    if (destinationIndex < sourceIndex) {
+      list[sourceIndex].order =
+        (list[destinationIndex].order + list[destinationIndex - 1].order) / 2;
+      sortList(list);
+      return;
+    }
+    list[sourceIndex].order =
+      (list[destinationIndex].order + list[destinationIndex + 1].order) / 2;
+    sortList(list);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ListManager
+        items={state.sortedList}
+        direction="horizontal"
+        maxItems={3}
+        render={(item) => <ListElement item={item} />}
+        onDragEnd={reorderList}
+      />
     </div>
   );
 }
